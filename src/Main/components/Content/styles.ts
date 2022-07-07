@@ -18,6 +18,13 @@ export const Container = styled.View`
   padding: 30px 0;
 `;
 
+export const Content = styled.View`
+  flex: 1;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px 0;
+`;
+
 export const Title = styled.Text`
   color: white;
   font-size: 28px;
@@ -26,17 +33,11 @@ export const Title = styled.Text`
 `;
 
 export const Card = styled.View`
-  width: ${width}px;
-  align-items: center;
-`;
-
-export const CardContent = styled.View`
-  height: 100%;
-  width: ${width - 80}px;
+  width: ${width - 100}px;
   align-items: center;
   border-radius: 15px;
-
   overflow: hidden;
+  margin: 0 15px;
 `;
 
 export const CardHeader = styled.View`
@@ -101,13 +102,12 @@ export const Pic = styled(Animated.Image).attrs({
 export const Background = styled(Animated.Image).attrs({
   resizeMode: "contain",
 })`
-  height: 110%;
-  margin-top: -20px;
+  height: 120%;
+  /* margin-top: 10px; */
 `;
 
 export const Desc = styled.Text`
   color: white;
-
   font-family: Roboto;
   letter-spacing: 5px;
   margin-top: 30px;

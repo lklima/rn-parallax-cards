@@ -1,6 +1,11 @@
 import React from "react";
-import { FlatList } from "react-native";
-import { useAnimatedSensor, useAnimatedStyle } from "react-native-reanimated";
+import { FlatList, useWindowDimensions } from "react-native";
+import {
+  SensorType,
+  useAnimatedSensor,
+  useAnimatedStyle,
+  withTiming,
+} from "react-native-reanimated";
 
 import {
   Title,
@@ -14,16 +19,32 @@ import {
   CardHeader,
   CardButtom,
   CardButtomText,
-  CardContent,
 } from "./styles";
 
 import { places } from "./utils";
 
 export default function Content() {
-  const animatedSensor = useAnimatedSensor();
+  const { width } = useWindowDimensions();
+  const animatedSensor = useAnimatedSensor(SensorType.ROTATION, { interval: 10 });
 
-  const picAniamtedStyle = useAnimatedStyle(() => ({}));
-  const backgroundAnimatedStyle = useAnimatedStyle(() => ({}));
+  const picAniamtedStyle = useAnimatedStyle(() => {
+    const qx = Math.abs(animatedSensor.sensor.value.qx);
+    return {
+      transform: [{ translateX: withTiming(qx * 80, { duration: 100 }) }],
+    };
+  });
+
+  const backgroundAnimatedStyle = useAnimatedStyle(() => {
+    const qx = Math.abs(animatedSensor.sensor.value.qx);
+    return {
+      transform: [{ translateX: withTiming(qx * 300, { duration: 50 }) }],
+    };
+  });
+
+  const previewCount = 3;
+  const itemWidth = width / (previewCount + 0.5);
+  const startScroll = (itemWidth * 3) / 4;
+  const snapToOffsets = places.map((_, i) => i * itemWidth + startScroll);
 
   return (
     <Container>
@@ -34,21 +55,22 @@ export default function Content() {
         horizontal
         showsHorizontalScrollIndicator={false}
         pagingEnabled
-        decelerationRate="fast"
+        decelerationRate={0}
+        snapToInterval={width}
         snapToAlignment="center"
+        snapToOffsets={snapToOffsets}
+        contentContainerStyle={{ paddingHorizontal: 20 }}
         renderItem={({ item }) => (
           <Card>
-            <CardContent>
-              <CardHeader>
-                <CardDesc>FEATURED</CardDesc>
-                <PlaceName>{item.name}</PlaceName>
-                <CardButtom>
-                  <CardButtomText>EXPLORE</CardButtomText>
-                </CardButtom>
-              </CardHeader>
-              <Pic source={item.photo} offset={item.offset} style={picAniamtedStyle} />
-              <Background source={item.bg} style={backgroundAnimatedStyle} />
-            </CardContent>
+            <CardHeader>
+              <CardDesc>FEATURED</CardDesc>
+              <PlaceName>{item.name}</PlaceName>
+              <CardButtom>
+                <CardButtomText>EXPLORE</CardButtomText>
+              </CardButtom>
+            </CardHeader>
+            <Pic source={item.photo} offset={item.offset} style={picAniamtedStyle} />
+            <Background source={item.bg} style={backgroundAnimatedStyle} />
           </Card>
         )}
       />
