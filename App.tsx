@@ -1,18 +1,17 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { useFonts } from "expo-font";
+
+import Main from "./src/Main";
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-    </View>
-  );
-}
+  const [loaded] = useFonts({
+    Bold: require("./src/assets/fonts/GabrielaStencil-Bold.ttf"),
+    Light: require("./src/assets/fonts/GabrielaStencil-Light.ttf"),
+    Roboto: require("./src/assets/fonts/Roboto.ttf"),
+  });
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+  if (!loaded) {
+    return <></>;
+  }
+
+  return <Main />;
+}
