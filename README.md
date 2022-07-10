@@ -12,3 +12,6 @@ React Native animated app with reanimated + expo.
 Inspired by this [Dribble](https://dribbble.com/shots/14330503--Parallax-Travel-Cards) .
 
 Give me a ⭐️ if liked it and follow me.
+
+https://user-images.githubusercontent.com/44346970/178128495-0cfb22c4-8672-4a7b-aecb-30082160f229.mp4
+
