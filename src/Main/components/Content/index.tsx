@@ -1,5 +1,5 @@
 import React from "react";
-import { FlatList, useWindowDimensions } from "react-native";
+import { FlatList, Dimensions } from "react-native";
 import {
   SensorType,
   useAnimatedSensor,
@@ -23,28 +23,35 @@ import {
 
 import { places } from "./utils";
 
+const { width } = Dimensions.get("screen");
+
 export default function Content() {
-  const { width } = useWindowDimensions();
-  const animatedSensor = useAnimatedSensor(SensorType.ROTATION, { interval: 10 });
+  const animatedSensor = useAnimatedSensor(SensorType.ROTATION, {
+    interval: 10,
+  });
 
   const picAniamtedStyle = useAnimatedStyle(() => {
-    const qx = Math.abs(animatedSensor.sensor.value.qx);
+    const qx = animatedSensor.sensor.value.qx;
     return {
       transform: [{ translateX: withTiming(qx * 80, { duration: 100 }) }],
     };
   });
 
   const backgroundAnimatedStyle = useAnimatedStyle(() => {
-    const qx = Math.abs(animatedSensor.sensor.value.qx);
+    const qx = animatedSensor.sensor.value.qx;
     return {
       transform: [{ translateX: withTiming(qx * 300, { duration: 50 }) }],
     };
   });
 
-  const previewCount = 3;
-  const itemWidth = width / (previewCount + 0.5);
-  const startScroll = (itemWidth * 3) / 4;
-  const snapToOffsets = places.map((_, i) => i * itemWidth + startScroll);
+  const itemWidth = width - 100;
+  const snapToOffsets = places.map((_, i) => {
+    if (i === 0) return 0;
+    else {
+      return i * (itemWidth + 30) + 5;
+    }
+  });
+  console.log("snapToOffsets", snapToOffsets);
 
   return (
     <Container>
@@ -54,11 +61,8 @@ export default function Content() {
         keyExtractor={(item) => item.id}
         horizontal
         showsHorizontalScrollIndicator={false}
-        pagingEnabled
-        decelerationRate={0}
-        snapToInterval={width}
-        snapToAlignment="center"
         snapToOffsets={snapToOffsets}
+        decelerationRate="fast"
         contentContainerStyle={{ paddingHorizontal: 20 }}
         renderItem={({ item }) => (
           <Card>
@@ -69,7 +73,11 @@ export default function Content() {
                 <CardButtomText>EXPLORE</CardButtomText>
               </CardButtom>
             </CardHeader>
-            <Pic source={item.photo} offset={item.offset} style={picAniamtedStyle} />
+            <Pic
+              source={item.photo}
+              offset={item.offset}
+              style={picAniamtedStyle}
+            />
             <Background source={item.bg} style={backgroundAnimatedStyle} />
           </Card>
         )}

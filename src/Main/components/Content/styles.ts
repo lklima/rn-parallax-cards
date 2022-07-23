@@ -2,7 +2,7 @@ import { Dimensions } from "react-native";
 import Animated from "react-native-reanimated";
 import styled, { css } from "styled-components/native";
 
-const { width } = Dimensions.get("window");
+const { width } = Dimensions.get("screen");
 
 interface Props {
   offset: {
